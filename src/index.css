@@ -1,0 +1,352 @@
+:root {
+  /* Color tokens — ink track at night, lit by a single amber marker light. */
+  --ink-950: #0d0e12;
+  --ink-900: #14161b;
+  --ink-800: #1c1f26;
+  --ink-700: #262a33;
+  --ink-600: #343947;
+  --line: #2b2f39;
+  --text-hi: #f1f2f5;
+  --text-mid: #a8adba;
+  --text-low: #6b7080;
+  --amber: #f0b429;
+  --amber-dim: #7a5c1e;
+  --green: #4fae6e;
+  --red: #e2574c;
+  --blue: #4f8ef7;
+
+  --font-display: 'Archivo', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'SF Mono', ui-monospace, monospace;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--ink-950);
+  color: var(--text-hi);
+  font-family: var(--font-display);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+}
+
+::selection {
+  background: var(--amber);
+  color: var(--ink-950);
+}
+
+/* Visible keyboard focus everywhere, no exceptions */
+:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* -------------------------------------------------------------- */
+/* Shared layout                                                  */
+/* -------------------------------------------------------------- */
+
+.page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 0 20px 64px;
+}
+
+.page-inner {
+  width: 100%;
+  max-width: 720px;
+  margin-top: 48px;
+}
+
+.track-rule {
+  height: 3px;
+  width: 56px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--amber) 0px,
+    var(--amber) 10px,
+    transparent 10px,
+    transparent 18px
+  );
+  margin: 0 0 20px;
+}
+
+.btn {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: var(--ink-800);
+  color: var(--text-hi);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 15px;
+  padding: 13px 22px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn:hover {
+  border-color: var(--ink-600);
+  background: var(--ink-700);
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-primary {
+  background: var(--amber);
+  border-color: var(--amber);
+  color: var(--ink-950);
+}
+
+.btn-primary:hover {
+  background: #ffc94d;
+  border-color: #ffc94d;
+  box-shadow: 0 6px 18px rgba(240, 180, 41, 0.35);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.field-label {
+  display: block;
+  font-size: 13px;
+  color: var(--text-mid);
+  margin-bottom: 8px;
+}
+
+.text-input {
+  width: 100%;
+  background: var(--ink-900);
+  border: 1px solid var(--line);
+  color: var(--text-hi);
+  font-family: var(--font-display);
+  font-size: 17px;
+  padding: 13px 14px;
+  border-radius: var(--radius-sm);
+}
+
+.text-input:focus {
+  border-color: var(--amber);
+}
+
+.text-input::placeholder {
+  color: var(--text-low);
+}
+
+.error-text {
+  color: var(--red);
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+.card {
+  background: var(--ink-900);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 28px;
+}
+
+.stat-row {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-value {
+  font-family: var(--font-mono);
+  font-size: 30px;
+  font-weight: 600;
+  color: var(--amber);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 12.5px;
+  color: var(--text-mid);
+}
+
+/* -------------------------------------------------------------- */
+/* Start lights (Countdown)                                       */
+/* -------------------------------------------------------------- */
+
+.light {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--ink-800);
+  border: 2px solid var(--line);
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.light.on-red {
+  background: var(--red);
+  border-color: var(--red);
+  box-shadow: 0 0 16px rgba(226, 87, 76, 0.65);
+}
+
+.light.on-green {
+  background: var(--green);
+  border-color: var(--green);
+  box-shadow: 0 0 20px rgba(79, 174, 110, 0.75);
+}
+
+.go-text {
+  color: var(--green);
+  display: inline-block;
+  animation: goPop 0.35s ease;
+}
+
+@keyframes goPop {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* -------------------------------------------------------------- */
+/* Confetti                                                        */
+/* -------------------------------------------------------------- */
+
+.confetti-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 40;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: -20px;
+  border-radius: 1px;
+  animation-name: confettiFall;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(105vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* -------------------------------------------------------------- */
+/* Race lane (Leaderboard)                                        */
+/* -------------------------------------------------------------- */
+
+.lane-track {
+  position: relative;
+  height: 22px;
+  border-radius: 11px;
+  background: var(--ink-800);
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--ink-700) 0px,
+    var(--ink-700) 8px,
+    transparent 8px,
+    transparent 20px
+  );
+  overflow: hidden;
+}
+
+.lane-icon {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transition: left 0.25s ease;
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* -------------------------------------------------------------- */
+/* Home hero motion (single orchestrated entrance)                */
+/* -------------------------------------------------------------- */
+
+.hero-enter {
+  animation: heroRise 0.5s ease both;
+}
+
+@keyframes heroRise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stripe-divider {
+  height: 4px;
+  border-radius: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--amber) 0px,
+    var(--amber) 22px,
+    var(--ink-800) 22px,
+    var(--ink-800) 44px
+  );
+}
