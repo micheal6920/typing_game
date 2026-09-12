@@ -6,7 +6,7 @@ import Countdown from '../components/Countdown.jsx'
 import TypingArea from '../components/TypingArea.jsx'
 import Timer from '../components/Timer.jsx'
 import ResultCard from '../components/ResultCard.jsx'
-import { getLastName, setLastName, addHistoryEntry } from '../services/storage.js'
+import { addHistoryEntry } from '../services/storage.js'
 import { DIFFICULTIES } from '../utils/wordLists.js'
 
 const STAGE = { NAME: 'name', DIFFICULTY: 'difficulty', COUNTDOWN: 'countdown', TYPING: 'typing', RESULT: 'result' }
@@ -14,7 +14,7 @@ const STAGE = { NAME: 'name', DIFFICULTY: 'difficulty', COUNTDOWN: 'countdown', 
 export default function SinglePlayer() {
   const navigate = useNavigate()
   const [stage, setStage] = useState(STAGE.NAME)
-  const [name, setName] = useState(getLastName())
+  const [name, setName] = useState('')
   const [difficultyKey, setDifficultyKey] = useState('easy')
   const [raceStartTime, setRaceStartTime] = useState(null)
   const [result, setResult] = useState(null)
@@ -23,7 +23,6 @@ export default function SinglePlayer() {
 
   function handleNameSubmit(submittedName) {
     setName(submittedName)
-    setLastName(submittedName)
     setStage(STAGE.DIFFICULTY)
   }
 

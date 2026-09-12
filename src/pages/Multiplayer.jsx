@@ -7,7 +7,7 @@ import Timer from '../components/Timer.jsx'
 import Leaderboard from '../components/Leaderboard.jsx'
 import Confetti from '../components/Confetti.jsx'
 import { MultiplayerSession } from '../services/multiplayer.js'
-import { getLastName, setLastName, addHistoryEntry } from '../services/storage.js'
+import { addHistoryEntry } from '../services/storage.js'
 import { getRandomParagraph } from '../utils/paragraphs.js'
 
 const STAGE = {
@@ -26,7 +26,7 @@ export default function Multiplayer() {
   const sessionRef = useRef(null)
 
   const [stage, setStage] = useState(STAGE.NAME)
-  const [name, setName] = useState(getLastName())
+  const [name, setName] = useState('')
   const [players, setPlayers] = useState([])
   const [roomCode, setRoomCode] = useState('')
   const [joinCode, setJoinCode] = useState('')
@@ -65,7 +65,6 @@ export default function Multiplayer() {
 
   function handleNameSubmit(submittedName) {
     setName(submittedName)
-    setLastName(submittedName)
     setStage(STAGE.CHOICE)
   }
 

@@ -1,28 +1,11 @@
 /**
- * Thin wrapper around localStorage. The player "name" stored here is only
- * a convenience so returning players don't retype it — it is never an
- * account, credential, or identity of any kind.
+ * Thin wrapper around localStorage. Currently only used for local run
+ * history — the player's name is intentionally NOT persisted, so every
+ * visit starts with a blank name field.
  */
 
 const KEYS = {
-  NAME: 'typingrace_last_name',
   HISTORY: 'typingrace_history',
-}
-
-export function getLastName() {
-  try {
-    return localStorage.getItem(KEYS.NAME) || ''
-  } catch {
-    return ''
-  }
-}
-
-export function setLastName(name) {
-  try {
-    localStorage.setItem(KEYS.NAME, name)
-  } catch {
-    /* localStorage unavailable (e.g. private mode) — fail silently */
-  }
 }
 
 export function getHistory() {

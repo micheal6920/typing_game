@@ -58,3 +58,61 @@ export function buildResult({ target, typed, startTime, endTime, name }) {
     timeSeconds: Math.round((elapsedMs / 1000) * 10) / 10,
   }
 }
+
+/**
+ * Scores typed text word-by-word against target words, rather than as one
+ * continuous string. This is what the timed (Easy/Medium/Hard) modes use:
+ * each word is compared only against its own matching target word, so a
+ * missed space or a mistyped word can never shift the alignment and cause
+ * every word after it to falsely show as wrong.
+ *
+ * `typedSegments` is a parallel array to the target words the player has
+ * reached — one entry per word, where the last entry may still be "in
+ * progress" (no space pressed yet). Each committed word (i.e. every entry
+ * except a genuinely in-progress last one) contributes one extra correct
+ * character to account for the space keystroke that advanced past it, so
+ * WPM stays consistent with the conventional "5 chars = 1 word" measure.
+ */
+export function scoreWordsTyped(targetWords, typedSegments, { lastIsInProgress = false } = {}) {
+  let correctChars = 0
+  let totalTypedChars = 0
+
+  typedSegments.forEach((typedWord, idx) => {
+    const targetWord = targetWords[idx] || ''
+    const maxLen = Math.max(targetWord.length, typedWord.length)
+
+    for (let i = 0; i < maxLen; i++) {
+      if (i < typedWord.length) {
+        totalTypedChars++
+        if (typedWord[i] === targetWord[i]) correctChars++
+      }
+    }
+
+    const isLastSegment = idx === typedSegments.length - 1
+    if (!(isLastSegment && lastIsInProgress)) {
+      // Word was committed via a (correct-by-construction) space press.
+      totalTypedChars++
+      correctChars++
+    }
+  })
+
+  return { correctChars, totalTypedChars, incorrectChars: totalTypedChars - correctChars }
+}
+
+export function buildWordResult({ targetWords, typedSegments, startTime, endTime, name, lastIsInProgress }) {
+  const { correctChars, incorrectChars, totalTypedChars } = scoreWordsTyped(targetWords, typedSegments, {
+    lastIsInProgress,
+  })
+  const elapsedMs = Math.max(1, endTime - startTime)
+
+  return {
+    name,
+    wpm: calculateWPM(correctChars, elapsedMs),
+    accuracy: calculateAccuracy(correctChars, totalTypedChars),
+    errors: incorrectChars,
+    correctChars,
+    incorrectChars,
+    totalTypedChars,
+    timeSeconds: Math.round((elapsedMs / 1000) * 10) / 10,
+  }
+}

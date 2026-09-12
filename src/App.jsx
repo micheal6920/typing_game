@@ -1,5 +1,6 @@
 import { HashRouter, Routes, Route } from 'react-router-dom'
 import Header from './components/Header.jsx'
+import AutoUpdateChecker from './components/AutoUpdateChecker.jsx'
 import Home from './pages/Home.jsx'
 import SinglePlayer from './pages/SinglePlayer.jsx'
 import Multiplayer from './pages/Multiplayer.jsx'
@@ -11,6 +12,7 @@ export default function App() {
   return (
     <HashRouter>
       <Header />
+      <AutoUpdateChecker />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/single" element={<SinglePlayer />} />
