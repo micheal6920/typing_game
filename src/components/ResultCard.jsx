@@ -1,13 +1,14 @@
 import Confetti from './Confetti.jsx'
 import { getAvatar } from '../utils/avatars.js'
 
-export default function ResultCard({ result, onTryAgain, onHome }) {
+export default function ResultCard({ result, onTryAgain, onHome, onChangeDifficulty }) {
   return (
     <div className="card" style={{ textAlign: 'center', padding: '40px 32px', position: 'relative' }}>
       <Confetti />
       <div style={{ fontSize: 44, marginBottom: 4 }}>{getAvatar(result.name)}</div>
       <p style={{ color: 'var(--text-mid)', fontSize: 13, margin: '0 0 4px', letterSpacing: '0.02em' }}>
         🎉 Test complete
+        {result.difficultyLabel ? ` · ${result.difficultyLabel} mode` : ''}
       </p>
       <h2 style={{ fontSize: 26, margin: '0 0 28px' }}>{result.name}</h2>
 
@@ -26,10 +27,15 @@ export default function ResultCard({ result, onTryAgain, onHome }) {
         <Stat value={`${result.timeSeconds}s`} label="Time" />
       </div>
 
-      <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+      <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
         <button className="btn" onClick={onHome}>
           Home
         </button>
+        {onChangeDifficulty && (
+          <button className="btn" onClick={onChangeDifficulty}>
+            Change Difficulty
+          </button>
+        )}
         <button className="btn btn-primary" onClick={onTryAgain}>
           Try Again
         </button>
